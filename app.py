@@ -83,6 +83,51 @@ SITES_PATRONS = [
     },
 ]
 
+FICHES_PINTEREST = [
+    {
+        "titre": "Amigurumis & peluches (FR)",
+        "categories": ["Amigurumis / Jouets"],
+        "requete_base": "amigurumi crochet tutoriel etape par etape",
+        "badge": "Modèle fiche photo Pinterest",
+    },
+    {
+        "titre": "Amigurumis & peluches (EN - Step by Step)",
+        "categories": ["Amigurumis / Jouets"],
+        "requete_base": "crochet amigurumi step by step tutorial infographic",
+        "badge": "Modèle fiche photo Pinterest",
+    },
+    {
+        "titre": "Bonnets & accessoires d'hiver (FR)",
+        "categories": ["Bonnet"],
+        "requete_base": "bonnet crochet tuto etape par etape",
+        "badge": "Modèle fiche photo Pinterest",
+    },
+    {
+        "titre": "Écharpes & châles (FR)",
+        "categories": ["Écharpe"],
+        "requete_base": "echarpe crochet modele etape par etape",
+        "badge": "Modèle fiche photo Pinterest",
+    },
+    {
+        "titre": "Pulls, gilets & tops (FR)",
+        "categories": ["Pull"],
+        "requete_base": "pull crochet modele explication",
+        "badge": "Modèle fiche photo Pinterest",
+    },
+    {
+        "titre": "Décoration & maison (FR)",
+        "categories": ["Maison"],
+        "requete_base": "crochet maison granny square tuto etape",
+        "badge": "Modèle fiche photo Pinterest",
+    },
+    {
+        "titre": "Fiches visuelles & diagrammes (EN)",
+        "categories": ["Maison", "Amigurumis / Jouets", "Pull", "Écharpe", "Bonnet"],
+        "requete_base": "crochet pattern infographic step by step",
+        "badge": "Modèle fiche photo Pinterest",
+    },
+]
+
 
 def charger_favoris():
     if os.path.exists(FICHIER_FAVORIS):
@@ -105,14 +150,18 @@ if "favoris" not in st.session_state:
 st.title("🧶 Mon Assistant Crochet")
 st.caption("Recherche rapide de patrons gratuits & sauvegarde par catégorie")
 
-onglet_recherche, onglet_favoris = st.tabs(["🔍 Rechercher un patron", "⭐ Mes patrons sauvegardés"])
+onglet_recherche, onglet_fiches_pin, onglet_favoris = st.tabs([
+    "🔍 Rechercher un patron",
+    "📌 Fiches-photos Pinterest",
+    "⭐ Mes patrons sauvegardés",
+])
 
 with onglet_recherche:
     col_cat, col_mot = st.columns([1, 2])
     with col_cat:
-        categorie_choisie = st.selectbox("Catégorie", CATEGORIES)
+        categorie_choisie = st.selectbox("Catégorie", CATEGORIES, key="cat_recherche")
     with col_mot:
-        mot_cle = st.text_input("Mot-clé (ex: ours, granny, bonnet...)", "")
+        mot_cle = st.text_input("Mot-clé (ex: ours, granny, bonnet...)", "", key="mot_recherche")
 
     mot_encode = urllib.parse.quote_plus(mot_cle.strip())
 
@@ -137,6 +186,32 @@ with onglet_recherche:
                     st.link_button("Chercher", url_recherche, type="primary", use_container_width=True)
                 else:
                     st.button("Chercher", key=f"disabled_{site['nom']}", disabled=True, use_container_width=True)
+
+with onglet_fiches_pin:
+    st.subheader("Fiches-photos & tutoriels visuels Pinterest")
+    st.caption("Raccourcis pour retrouver les épingles au format fiche complète (matériel, abréviations, étapes)")
+
+    col_cat_pin, col_mot_pin = st.columns([1, 2])
+    with col_cat_pin:
+        cat_pin = st.selectbox("Catégorie de fiche", CATEGORIES, key="cat_pin")
+    with col_mot_pin:
+        mot_pin = st.text_input("Préciser un sujet (ex: dragon, chat, fleur...)", "", key="mot_pin")
+
+    fiches_filtrees = [
+        fiche for fiche in FICHES_PINTEREST
+        if cat_pin == "Toutes" or cat_pin in fiche["categories"]
+    ]
+
+    for idx, fiche in enumerate(fiches_filtrees):
+        with st.container(border=True):
+            c_info, c_btn = st.columns([3.2, 1.8])
+            with c_info:
+                st.markdown(f"**{fiche['titre']}**")
+                st.caption(f"🏷️ {fiche['badge']} · {' · '.join(fiche['categories'])}")
+            with c_btn:
+                requete_complete = f"{fiche['requete_base']} {mot_pin.strip()}".strip()
+                url_pin = f"https://www.pinterest.fr/search/pins/?q={urllib.parse.quote_plus(requete_complete)}"
+                st.link_button("Ouvrir sur Pinterest", url_pin, type="primary", use_container_width=True)
 
 with onglet_favoris:
     st.subheader("Enregistrer un nouveau patron")
