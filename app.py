@@ -1,114 +1,187 @@
+import json
+import os
 import urllib.parse
 import streamlit as st
 
-# Configuration de la page
 st.set_page_config(
-    page_title="Mon Assistant Crochet", page_icon="🧶", layout="wide"
+    page_title="Mon Assistant Crochet",
+    page_icon="🧶",
+    layout="centered",
 )
 
-st.title("🧶 Mon Assistant de Patrons de Crochet")
+FICHIER_FAVORIS = "favoris_crochet.json"
 
-# --- BARRE LATÉRALE (NAVIGATION) ---
-st.sidebar.header("📁 Rubriques")
-rubrique_choisie = st.sidebar.selectbox(
-    "Choisir une catégorie :",
-    [
-        "Accueil / Recherche globale",
-        "Maison",
-        "Doudou / Amigurumi",
-        "Pull / Gilet",
-        "Écharpe / Snood",
-        "Bonnet",
-        "Mes Favoris 💖",
-    ],
-)
+CATEGORIES = [
+    "Toutes",
+    "Home",
+    "Amigurumi/Toys",
+    "Sweater",
+    "Scarf",
+    "Bonnet",
+]
 
-# --- ZONE DE RECHERCHE ---
-st.markdown("---")
-st.subheader(f"Rubrique active : {rubrique_choisie}")
+SITES_PATRONS = [
+    {
+        "nom": "DROPS Design",
+        "url": "https://www.garnstudio.com/search.php?action=browse&c=women&lang=fr",
+        "categories": ["Home", "Sweater", "Scarf", "Bonnet"],
+        "recherche": "https://www.garnstudio.com/search.php?action=search&w={query}&lang=fr",
+    },
+    {
+        "nom": "Hobbii (Gratuits)",
+        "url": "https://hobbii.fr/modeles?filter=price%3A0",
+        "categories": ["Home", "Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "recherche": "https://hobbii.fr/modeles?search={query}&filter=price%3A0",
+    },
+    {
+        "nom": "Ravelry (Gratuits)",
+        "url": "https://www.ravelry.com/patterns/search#craft=crochet&availability=free&sort=best",
+        "categories": ["Home", "Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "recherche": "https://www.ravelry.com/patterns/search#craft=crochet&availability=free&query={query}",
+    },
+    {
+        "nom": "Pinterest",
+        "url": "https://www.pinterest.fr/search/pins/?q=patron%20crochet%20gratuit",
+        "categories": ["Home", "Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "recherche": "https://www.pinterest.fr/search/pins/?q={query}%20crochet%20patron%20gratuit",
+    },
+    {
+        "nom": "Yarnspirations",
+        "url": "https://www.yarnspirations.com/collections/patterns",
+        "categories": ["Home", "Sweater", "Scarf", "Bonnet"],
+        "recherche": "https://www.yarnspirations.com/search?q={query}",
+    },
+    {
+        "nom": "LoveCrafts (Gratuits)",
+        "url": "https://www.lovecrafts.com/en-us/l/crochet/crochet-patterns/free-crochet-patterns",
+        "categories": ["Home", "Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "recherche": "https://www.lovecrafts.com/en-us/search?q={query}&filter-price.value=0",
+    },
+    {
+        "nom": "Ribblr",
+        "url": "https://ribblr.com/patterns/crochet",
+        "categories": ["Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "recherche": "https://ribblr.com/search?q={query}",
+    },
+    {
+        "nom": "Lion Brand",
+        "url": "https://www.lionbrand.com/collections/all-crochet-patterns",
+        "categories": ["Home", "Sweater", "Scarf", "Bonnet"],
+        "recherche": "https://www.lionbrand.com/search?q={query}",
+    },
+    {
+        "nom": "Amigurumi Today",
+        "url": "https://amigurumitoday.com/",
+        "categories": ["Amigurumi/Toys"],
+        "recherche": "https://amigurumitoday.com/?s={query}",
+    },
+    {
+        "nom": "Happyberry Crochet",
+        "url": "https://www.happyberrycrochet.com/",
+        "categories": ["Home", "Amigurumi/Toys", "Bonnet"],
+        "recherche": "https://www.google.com/search?q=site:happyberrycrochet.com+{query}",
+    },
+]
 
-recherche_utilisateur = st.text_input(
-    "🔍 Que recherchez-vous aujourd'hui ?",
-    placeholder="Ex: Griffy le griffon, plaid, bonnet, doudou...",
-)
 
-if recherche_utilisateur:
-  # Encodage propre du texte pour les URLs
-  mot_cle_encode = urllib.parse.quote(recherche_utilisateur)
-  mot_cle_gratuit = urllib.parse.quote(
-      f"patron crochet gratuit {recherche_utilisateur}"
-  )
+def charger_favoris():
+    if os.path.exists(FICHIER_FAVORIS):
+        try:
+            with open(FICHIER_FAVORIS, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
 
-  st.markdown("### 🚀 Rechercher directement des patrons gratuits sur :")
 
-  # Création de 4 colonnes pour aligner les 4 boutons côte à côte
-  col1, col2, col3, col4 = st.columns(4)
+def sauvegarder_favoris(favoris):
+    with open(FICHIER_FAVORIS, "w", encoding="utf-8") as f:
+        json.dump(favoris, f, ensure_ascii=False, indent=2)
 
-  with col1:
-    url_drops = (
-        f"https://www.garnstudio.com/search.php?action=browse&c=crochet&q={mot_cle_encode}&lang=fr"
-    )
-    st.link_button(
-        "🧶 DROPS Design (100% Gratuit)", url_drops, use_container_width=True
-    )
 
-  with col2:
-    url_hobbii = (
-        f"https://hobbii.fr/product-patterns?search={mot_cle_encode}&filter=price%3A0"
-    )
-    st.link_button(
-        "🌈 Hobbii (Modèles gratuits)", url_hobbii, use_container_width=True
-    )
+if "favoris" not in st.session_state:
+    st.session_state.favoris = charger_favoris()
 
-  with col3:
-    url_ravelry = (
-        f"https://www.ravelry.com/patterns/search#craft=crochet&availability=free&query={mot_cle_encode}"
-    )
-    st.link_button(
-        "🐑 Ravelry (Filtre Gratuit)", url_ravelry, use_container_width=True
-    )
+st.title("🧶 Mon Assistant Crochet")
+st.caption("Recherche rapide de patrons gratuits & sauvegarde par catégorie")
 
-  with col4:
-    url_pinterest = (
-        f"https://fr.pinterest.com/search/pins/?q={mot_cle_gratuit}"
-    )
-    st.link_button(
-        "📌 Pinterest (Idées & Blogs)", url_pinterest, use_container_width=True
-    )
+onglet_recherche, onglet_favoris = st.tabs(["🔍 Rechercher un patron", "⭐ Mes patrons sauvegardés"])
 
-  # Bouton secondaire pour une recherche Google ciblée blogs (en excluant Etsy)
-  st.markdown("")
-  url_google_sans_etsy = (
-      f"https://www.google.com/search?q={mot_cle_gratuit}+-site:etsy.com"
-  )
-  st.link_button(
-      "🌐 Recherche Google (Sans les résultats payants Etsy)",
-      url_google_sans_etsy,
-  )
+with onglet_recherche:
+    col_cat, col_mot = st.columns([1, 2])
+    with col_cat:
+        categorie_choisie = st.selectbox("Catégorie", CATEGORIES)
+    with col_mot:
+        mot_cle = st.text_input("Mot-clé (ex: ours, granny, bonnet...)", "")
 
-  # --- FORMULAIRE DE SAUVEGARDE ---
-  st.markdown("---")
-  st.subheader(
-      "📥 Enregistrer votre trouvaille dans la rubrique :"
-      f" {rubrique_choisie}"
-  )
+    mot_encode = urllib.parse.quote_plus(mot_cle.strip())
 
-  nom_patron = st.text_input("Nom du modèle trouvé", value=recherche_utilisateur)
-  lien_patron = st.text_input(
-      "Collez le lien (URL) du site ou du PDF trouvé sur le web :"
-  )
+    st.subheader("Sites de patrons gratuits")
 
-  if st.button("Enregistrer dans ma bibliothèque"):
-    if lien_patron:
-      st.success(
-          f"✅ Le modèle '**{nom_patron}**' a été sauvegardé avec succès dans"
-          f" la rubrique **{rubrique_choisie}** !"
-      )
+    sites_filtres = [
+        site for site in SITES_PATRONS
+        if categorie_choisie == "Toutes" or categorie_choisie in site["categories"]
+    ]
+
+    for site in sites_filtres:
+        with st.container(border=True):
+            c1, c2, c3 = st.columns([3, 1.3, 1.5])
+            with c1:
+                st.markdown(f"**{site['nom']}**")
+                st.caption(" · ".join(site["categories"]))
+            with c2:
+                st.link_button("Catalogue", site["url"], use_container_width=True)
+            with c3:
+                if mot_encode:
+                    url_recherche = site["recherche"].format(query=mot_encode)
+                    st.link_button("Chercher", url_recherche, type="primary", use_container_width=True)
+                else:
+                    st.button("Chercher", key=f"disabled_{site['nom']}", disabled=True, use_container_width=True)
+
+with onglet_favoris:
+    st.subheader("Enregistrer un nouveau patron")
+    with st.form("ajout_favori", clear_on_submit=True):
+        titre_patron = st.text_input("Nom du modèle (ex: Bonnet côtelé DROPS)")
+        url_patron = st.text_input("Lien URL du patron (https://...)")
+        cat_patron = st.selectbox("Catégorie du patron", CATEGORIES[1:])
+        soumis = st.form_submit_button("💾 Sauvegarder le patron")
+
+        if soumis:
+            if titre_patron.strip() and url_patron.strip():
+                nouveau = {
+                    "titre": titre_patron.strip(),
+                    "url": url_patron.strip(),
+                    "categorie": cat_patron,
+                }
+                st.session_state.favoris.append(nouveau)
+                sauvegarder_favoris(st.session_state.favoris)
+                st.success("Patron ajouté à votre liste !")
+            else:
+                st.warning("Veuillez remplir le nom et le lien URL du patron.")
+
+    st.divider()
+    st.subheader("Ma liste enregistrée")
+
+    filtre_fav = st.selectbox("Filtrer mes favoris par catégorie", CATEGORIES, key="filtre_fav")
+    favoris_affiches = [
+        (idx, fav)
+        for idx, fav in enumerate(st.session_state.favoris)
+        if filtre_fav == "Toutes" or fav["categorie"] == filtre_fav
+    ]
+
+    if not favoris_affiches:
+        st.info("Aucun patron enregistré dans cette catégorie pour le moment.")
     else:
-      st.warning("Veuillez coller un lien valide.")
-
-else:
-  st.info(
-      "👆 Tapez un mot-clé ci-dessus pour faire apparaître les touches de"
-      " recherche directe vers les sites gratuits."
-  )
+        for idx, fav in favoris_affiches:
+            with st.container(border=True):
+                col_info, col_ouvrir, col_suppr = st.columns([4, 1.3, 0.8])
+                with col_info:
+                    st.markdown(f"**{fav['titre']}**")
+                    st.caption(f"Catégorie : {fav['categorie']}")
+                with col_ouvrir:
+                    st.link_button("Ouvrir", fav["url"], use_container_width=True)
+                with col_suppr:
+                    if st.button("🗑️", key=f"del_{idx}", help="Supprimer"):
+                        st.session_state.favoris.pop(idx)
+                        sauvegarder_favoris(st.session_state.favoris)
+                        st.rerun()
