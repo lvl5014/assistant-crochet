@@ -58,10 +58,10 @@ SITES_PATRONS = [
         "recherche": "https://www.lovecrafts.com/en-us/search?q={query}&filter-price.value=0",
     },
     {
-        "nom": "Ribblr",
-        "url": "https://ribblr.com/patterns/crochet",
+        "nom": "Ribblr (Gratuits)",
+        "url": "https://ribblr.com/patterns/crochet?price=free",
         "categories": ["Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
-        "recherche": "https://ribblr.com/search?q={query}",
+        "recherche": "https://ribblr.com/search?q={query}&price=free",
     },
     {
         "nom": "Lion Brand",
@@ -70,10 +70,10 @@ SITES_PATRONS = [
         "recherche": "https://www.lionbrand.com/search?q={query}",
     },
     {
-        "nom": "Amigurumi Today",
-        "url": "https://amigurumitoday.com/",
+        "nom": "Supergurumi (Amigurumis)",
+        "url": "https://www.supergurumi.com/amigurumi-patterns",
         "categories": ["Amigurumi/Toys"],
-        "recherche": "https://amigurumitoday.com/?s={query}",
+        "recherche": "https://www.supergurumi.com/?s={query}",
     },
     {
         "nom": "Happyberry Crochet",
