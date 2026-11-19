@@ -76,10 +76,10 @@ SITES_PATRONS = [
         "recherche": "https://www.supergurumi.com/?s={query}",
     },
     {
-        "nom": "Happyberry Crochet",
-        "url": "https://www.happyberrycrochet.com/",
+        "nom": "All About Ami",
+        "url": "https://www.allaboutami.com/patterns/",
         "categories": ["Maison", "Amigurumis / Jouets", "Bonnet"],
-        "recherche": "https://www.google.com/search?q=site:happyberrycrochet.com+{query}",
+        "recherche": "https://www.allaboutami.com/?s={query}",
     },
 ]
 
