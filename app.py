@@ -13,10 +13,10 @@ FICHIER_FAVORIS = "favoris_crochet.json"
 
 CATEGORIES = [
     "Toutes",
-    "Home",
-    "Amigurumi/Toys",
-    "Sweater",
-    "Scarf",
+    "Maison",
+    "Amigurumis / Jouets",
+    "Pull",
+    "Écharpe",
     "Bonnet",
 ]
 
@@ -24,61 +24,61 @@ SITES_PATRONS = [
     {
         "nom": "DROPS Design",
         "url": "https://www.garnstudio.com/search.php?action=browse&c=women&lang=fr",
-        "categories": ["Home", "Sweater", "Scarf", "Bonnet"],
+        "categories": ["Maison", "Pull", "Écharpe", "Bonnet"],
         "recherche": "https://www.garnstudio.com/search.php?action=search&w={query}&lang=fr",
     },
     {
         "nom": "Hobbii (Gratuits)",
         "url": "https://hobbii.fr/modeles?filter=price%3A0",
-        "categories": ["Home", "Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "categories": ["Maison", "Amigurumis / Jouets", "Pull", "Écharpe", "Bonnet"],
         "recherche": "https://hobbii.fr/modeles?search={query}&filter=price%3A0",
     },
     {
         "nom": "Ravelry (Gratuits)",
         "url": "https://www.ravelry.com/patterns/search#craft=crochet&availability=free&sort=best",
-        "categories": ["Home", "Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "categories": ["Maison", "Amigurumis / Jouets", "Pull", "Écharpe", "Bonnet"],
         "recherche": "https://www.ravelry.com/patterns/search#craft=crochet&availability=free&query={query}",
     },
     {
         "nom": "Pinterest",
         "url": "https://www.pinterest.fr/search/pins/?q=patron%20crochet%20gratuit",
-        "categories": ["Home", "Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "categories": ["Maison", "Amigurumis / Jouets", "Pull", "Écharpe", "Bonnet"],
         "recherche": "https://www.pinterest.fr/search/pins/?q={query}%20crochet%20patron%20gratuit",
     },
     {
         "nom": "Yarnspirations",
         "url": "https://www.yarnspirations.com/collections/patterns",
-        "categories": ["Home", "Sweater", "Scarf", "Bonnet"],
+        "categories": ["Maison", "Pull", "Écharpe", "Bonnet"],
         "recherche": "https://www.yarnspirations.com/search?q={query}",
     },
     {
         "nom": "LoveCrafts (Gratuits)",
         "url": "https://www.lovecrafts.com/en-us/l/crochet/crochet-patterns/free-crochet-patterns",
-        "categories": ["Home", "Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "categories": ["Maison", "Amigurumis / Jouets", "Pull", "Écharpe", "Bonnet"],
         "recherche": "https://www.lovecrafts.com/en-us/search?q={query}&filter-price.value=0",
     },
     {
         "nom": "Ribblr (Gratuits)",
         "url": "https://ribblr.com/patterns/crochet?price=free",
-        "categories": ["Amigurumi/Toys", "Sweater", "Scarf", "Bonnet"],
+        "categories": ["Amigurumis / Jouets", "Pull", "Écharpe", "Bonnet"],
         "recherche": "https://ribblr.com/search?q={query}&price=free",
     },
     {
         "nom": "Lion Brand",
         "url": "https://www.lionbrand.com/collections/all-crochet-patterns",
-        "categories": ["Home", "Sweater", "Scarf", "Bonnet"],
+        "categories": ["Maison", "Pull", "Écharpe", "Bonnet"],
         "recherche": "https://www.lionbrand.com/search?q={query}",
     },
     {
         "nom": "Supergurumi (Amigurumis)",
         "url": "https://www.supergurumi.com/amigurumi-patterns",
-        "categories": ["Amigurumi/Toys"],
+        "categories": ["Amigurumis / Jouets"],
         "recherche": "https://www.supergurumi.com/?s={query}",
     },
     {
         "nom": "Happyberry Crochet",
         "url": "https://www.happyberrycrochet.com/",
-        "categories": ["Home", "Amigurumi/Toys", "Bonnet"],
+        "categories": ["Maison", "Amigurumis / Jouets", "Bonnet"],
         "recherche": "https://www.google.com/search?q=site:happyberrycrochet.com+{query}",
     },
 ]
